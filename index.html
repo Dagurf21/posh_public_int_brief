@@ -18,15 +18,15 @@
     a{color:var(--link);text-decoration-color:color-mix(in oklab,var(--link),transparent 70%)}
     a:focus, button:focus, [tabindex]:focus{outline:2px solid var(--link);outline-offset:2px}
     .container{max-width:72ch;margin-inline:auto;padding:2rem;}
-    header{position:sticky;top:0;background:color-mix(in oklab,var(--bg),transparent 10%);backdrop-filter:saturate(1.2) blur(8px);border-bottom:1px solid color-mix(in oklab,var(--fg),transparent 90%);}
-    .hero{padding:2.5rem 0 1rem}
-    h1{font-size:clamp(1.75rem,3.5vw,2.75rem);line-height:1.12;margin:0}
+    header{position:sticky;top:0;z-index:1000;background:color-mix(in oklab,var(--bg),transparent 10%);backdrop-filter:saturate(1.2) blur(8px);border-bottom:1px solid color-mix(in oklab,var(--fg),transparent 90%);} 
+    .hero{padding:1.5rem 0 .5rem} 
+    h1{font-size:clamp(1.5rem,3vw,2.25rem);line-height:1.15;margin:0} 
     .subtitle{color:var(--muted);margin:.5rem 0 0}
     nav{margin:1rem 0 0}
-    .toc{display:grid;gap:.5rem;padding:1rem;background:var(--card);border:1px solid color-mix(in oklab,var(--fg),transparent 88%);border-radius:14px}
+    .toc{padding:0;margin-top:1rem}
     .toc a{display:block;text-decoration:none;padding:.35rem .6rem;border-radius:10px}
     .toc a:hover{background:color-mix(in oklab,var(--link),transparent 90%)}
-    main{display:grid;gap:2rem;margin-top:1.25rem}
+    main{display:grid;gap:2rem;margin-top:1rem} 
     section h2{font-size:clamp(1.25rem,2.2vw,1.75rem);line-height:1.2;margin:0 0 .6rem}
     p,li{max-width:70ch}
     .callout{padding:1rem;border-left:4px solid var(--link);background:var(--card);border-radius:10px}
@@ -39,6 +39,19 @@
     .meta{display:flex;gap:.5rem;flex-wrap:wrap;color:var(--muted);font-size:.95rem}
     .badge{padding:.15rem .5rem;border:1px solid color-mix(in oklab,var(--fg),transparent 80%);border-radius:999px}
     .card{padding:1rem;border:1px solid color-mix(in oklab,var(--fg),transparent 88%);border-radius:14px;background:var(--card)}
+    .toc details{border:1px solid color-mix(in oklab,var(--fg),transparent 88%);background:var(--card);border-radius:14px;overflow:hidden}
+    .toc summary{cursor:pointer;list-style:none;padding:.8rem 1rem;font-weight:700;display:flex;align-items:center;gap:.5rem}
+    .toc summary::marker{display:none}
+    .toc summary::after{content:"▾";margin-left:auto;transition:transform .2s ease}
+    .toc details[open] summary::after{transform:rotate(180deg)}
+    .toc .toc-list{display:grid;gap:.5rem;padding:0 1rem 1rem}
+    .toc .toc-list a{display:block;text-decoration:none;padding:.35rem .6rem;border-radius:10px}
+    .toc .toc-list a:hover{background:color-mix(in oklab,var(--link),transparent 90%)}
+    @media (min-width: 960px){
+      .toc{position:relative}
+      .toc details{max-width:100%}
+    }
+    [id]{scroll-margin-top:84px}
   </style>
 </head>
 <body>
@@ -53,15 +66,19 @@
         <span class="badge">Guide</span>
       </div>
       <nav aria-label="Table of contents" class="toc">
-        <strong>On this page</strong>
-        <a href="#short-version">The short version</a>
-        <a href="#why-joke-sticks">Why “it’s just a joke” sticks</a>
-        <a href="#coordination">How anonymous coordination works</a>
-        <a href="#pile-on">The pile‑on machine</a>
-        <a href="#what-to-do">What parents and students can do</a>
-        <a href="#mini-cases">Two quick mini‑cases</a>
-        <a href="#takeaway">Final takeaway</a>
-        <a href="#reflection">Reflection (~300 words)</a>
+        <details id="toc">
+          <summary>On this page</summary>
+          <div class="toc-list">
+            <a href="#short-version">The short version</a>
+            <a href="#why-joke-sticks">Why “it’s just a joke” sticks</a>
+            <a href="#coordination">How anonymous coordination works</a>
+            <a href="#pile-on">The pile‑on machine</a>
+            <a href="#what-to-do">What parents and students can do</a>
+            <a href="#mini-cases">Two quick mini‑cases</a>
+            <a href="#takeaway">Final takeaway</a>
+            <a href="#reflection">Reflection (~300 words)</a>
+          </div>
+        </details>
       </nav>
     </div>
   </header>
@@ -150,6 +167,14 @@
 
   <script>
     document.getElementById('year').textContent = new Date().getFullYear();
+    // Close the TOC dropdown after selecting a link (useful on mobile)
+    const toc = document.getElementById('toc');
+    if (toc){
+      toc.addEventListener('click', (e)=>{
+        const a = e.target.closest('a');
+        if (a && toc.open) setTimeout(()=> toc.open = false, 150);
+      });
+    }
   </script>
 </body>
 </html>
